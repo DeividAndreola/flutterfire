@@ -19,9 +19,12 @@ import io.flutter.plugin.common.MethodChannel;
 import io.flutter.plugin.common.MethodChannel.MethodCallHandler;
 import io.flutter.plugin.common.MethodChannel.Result;
 import io.flutter.plugin.common.PluginRegistry;
+
 import java.util.Map;
 
-/** Flutter plugin for Firebase Analytics. */
+/**
+ * Flutter plugin for Firebase Analytics.
+ */
 public class FirebaseAnalyticsPlugin implements MethodCallHandler, FlutterPlugin, ActivityAware {
   private FirebaseAnalytics firebaseAnalytics;
   private MethodChannel methodChannel;
@@ -75,7 +78,8 @@ public class FirebaseAnalyticsPlugin implements MethodCallHandler, FlutterPlugin
   }
 
   @Override
-  public void onDetachedFromActivity() {}
+  public void onDetachedFromActivity() {
+  }
 
   @Override
   public void onMethodCall(MethodCall call, Result result) {
@@ -183,9 +187,25 @@ public class FirebaseAnalyticsPlugin implements MethodCallHandler, FlutterPlugin
         bundle.putDouble(key, (Double) value);
       } else if (value instanceof Boolean) {
         bundle.putBoolean(key, (Boolean) value);
+      } else if (value instanceof ArrayList<?>) {
+        ArrayList<Parcelable> list = new ArrayList<Parcelable>();
+
+        for (Object item : (ArrayList<?>) value) {
+          if (item instanceof Map) {
+            list.add(createBundleFromMap((Map<String, Object>) item));
+          } else {
+            throw new IllegalArgumentException(
+              "Unsupported value type: "
+                + value.getClass().getCanonicalName()
+                + " in list at key "
+                + key);
+          }
+        }
+
+        bundle.putParcelableArrayList(key, list);
       } else {
         throw new IllegalArgumentException(
-            "Unsupported value type: " + value.getClass().getCanonicalName());
+          "Unsupported value type: " + value.getClass().getCanonicalName());
       }
     }
     return bundle;
