@@ -6,6 +6,7 @@ package io.flutter.plugins.firebaseanalytics;
 
 import android.app.Activity;
 import android.content.Context;
+import android.os.Parcelable;
 import android.os.Bundle;
 import androidx.annotation.NonNull;
 import com.google.firebase.FirebaseApp;
@@ -19,7 +20,7 @@ import io.flutter.plugin.common.MethodChannel;
 import io.flutter.plugin.common.MethodChannel.MethodCallHandler;
 import io.flutter.plugin.common.MethodChannel.Result;
 import io.flutter.plugin.common.PluginRegistry;
-
+import java.util.ArrayList;
 import java.util.Map;
 
 /**
